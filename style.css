@@ -1,0 +1,715 @@
+/* ==========================================================================
+   일곱 금촛대 — 스타일
+   모바일(360px) 기준으로 쓰고, 900px 이상에서 데스크톱 배치로 바꾼다.
+   ========================================================================== */
+
+:root {
+  --lit: 0;                         /* 켜진 등잔 수 / 7 — app.js 가 갱신 */
+
+  --ink: #f3ead8;
+  --ink-soft: #cdc3da;
+  --ink-faint: #9990b3;
+
+  --gold: #c9a24b;
+  --gold-bright: #f5d889;
+  --gold-dim: #8c6b2c;
+  --gold-deep: #5f4619;
+
+  --parch: #f6ecd6;
+  --parch-ink: #2b1e3f;
+  --wrong: #ff9a8a;
+
+  --serif: "Noto Serif KR", "Nanum Myeongjo", "AppleMyungjo", "Batang", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard",
+          "Noto Sans KR", "Malgun Gothic", "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #0a081c;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+h1, h2, p, dl, dd, ol { margin: 0; }
+button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--gold-bright);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ---------- 배경: 성소 안, 청색·자색·홍색 실로 짠 휘장 앞 ---------- */
+.sanctuary {
+  position: fixed; inset: 0; z-index: -1;
+  background:
+    /* 아래로 갈수록 어두워지는 성소 안 */
+    linear-gradient(180deg, rgba(8,6,22,0) 30%, rgba(8,6,22,.55) 62%, rgba(6,4,16,.9) 100%),
+    /* 위에서 내려오는 빛 */
+    radial-gradient(120% 70% at 50% -5%, rgba(120,70,150,.45), rgba(40,20,70,0) 70%),
+    /* 청색 · 자색 · 홍색 실 */
+    repeating-linear-gradient(90deg,
+      #141b52 0, #2b1657 64px, #47143a 128px, #2b1657 192px, #141b52 256px),
+    #0a081c;
+}
+/* 휘장의 주름과 직조 결 */
+.sanctuary::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    /* 위쪽의 금 갈고리와 봉 */
+    linear-gradient(180deg, #7a5a22 0, #e6c26a 2px, #8c6b2c 5px, rgba(0,0,0,.45) 5px, rgba(0,0,0,0) 12px) top / 100% 12px no-repeat,
+    radial-gradient(circle at 50% 0, rgba(0,0,0,0) 3.5px, #d9b45a 3.5px, #d9b45a 5.5px, rgba(0,0,0,0) 6px) 0 4px / 32px 9px repeat-x,
+    /* 주름 */
+    repeating-linear-gradient(90deg,
+      rgba(255,255,255,.055) 0 3px, rgba(255,255,255,0) 3px 14px,
+      rgba(0,0,0,.26) 22px 30px, rgba(0,0,0,0) 30px 32px),
+    /* 직조 결 */
+    repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 4px);
+  -webkit-mask-image: linear-gradient(#000 0, #000 45%, rgba(0,0,0,.3) 100%);
+          mask-image: linear-gradient(#000 0, #000 45%, rgba(0,0,0,.3) 100%);
+}
+/* 등잔이 켜질수록 퍼지는 따뜻한 빛 */
+.sanctuary::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(95% 70% at 50% 16%, rgba(255,206,132,.40), rgba(226,132,78,.21) 42%, rgba(140,70,100,.13) 72%, rgba(255,214,160,.06) 100%);
+  opacity: var(--lit);
+  transition: opacity 1.4s ease;
+}
+
+/* ---------- 화면 전환 ---------- */
+#app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  overflow-x: clip;               /* 불빛과 바닥이 옆으로 번져도 가로 스크롤이 생기지 않게 */
+}
+#app[data-view="start"] :is(.bar, .game-panel, .done-panel, .table-panel),
+#app[data-view="game"]  :is(.intro, .start-panel, .done-panel, .table-panel),
+#app[data-view="done"]  :is(.intro, .start-panel, .game-panel, .table-panel),
+#app[data-view="table"] :is(.bar, .intro, .menorah-wrap, .start-panel, .game-panel, .done-panel) {
+  display: none;
+}
+
+/* ---------- 상단 바 ---------- */
+.bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px 2px;
+}
+.bar-mid { display: flex; flex-direction: column; align-items: center; line-height: 1.2; }
+.bar-end { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.mode-label { font-family: var(--serif); font-size: 12.5px; color: var(--ink-soft); letter-spacing: .04em; }
+.dots { font-size: 13px; letter-spacing: .28em; margin-right: -.28em; color: var(--gold-bright); white-space: nowrap; }
+.dots .off { color: rgba(201,162,75,.55); }
+.timer { font-variant-numeric: tabular-nums; font-size: 12.5px; color: var(--ink-soft); }
+
+.ghost-btn {
+  justify-self: start;
+  min-height: 36px;
+  padding: 4px 10px;
+  border: 1px solid rgba(201,162,75,.35);
+  border-radius: 999px;
+  background: rgba(12,9,32,.45);
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ghost-btn:hover { border-color: var(--gold); color: var(--ink); }
+.ghost-btn[aria-pressed="true"] { border-color: var(--gold-bright); color: var(--gold-bright); }
+
+/* ---------- 시작 화면 ---------- */
+.intro { text-align: center; padding: 30px 16px 4px; }
+.eyebrow { font-size: 12.5px; letter-spacing: .18em; color: var(--gold); }
+
+/* 머리글: 가는 금선 사이에 놓인 작은 글자 */
+.intro .eyebrow {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: .34em;
+  text-indent: .34em;              /* 자간 때문에 왼쪽으로 쏠리는 것을 바로잡는다 */
+  color: #e2c680;
+}
+.intro .eyebrow::before, .intro .eyebrow::after {
+  content: ""; flex: 0 1 46px; height: 1px;
+}
+.intro .eyebrow::before { background: linear-gradient(90deg, rgba(226,198,128,0), #e2c680); }
+.intro .eyebrow::after { background: linear-gradient(270deg, rgba(226,198,128,0), #e2c680); }
+
+/* 제목: 금박을 입힌 글자 */
+h1 {
+  margin: 10px 0 0;
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: clamp(38px, 11.5vw, 60px);
+  line-height: 1.22;
+  letter-spacing: .16em;
+  text-indent: .16em;
+  color: var(--gold-bright);
+  filter: drop-shadow(0 2px 0 rgba(60,36,8,.75)) drop-shadow(0 0 22px rgba(245,216,137,.28));
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  h1 {
+    background: linear-gradient(176deg,
+      #fffbe6 0%, #f8e3a0 22%, #d9ab45 46%, #f6dc92 58%, #b98a2c 78%, #f1d48a 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+/* 제목 아래 장식: 금선 — 마름모 — 금선 */
+.ornament {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin: 12px auto 10px;
+}
+.ornament i { flex: 0 1 92px; height: 1px; }
+.ornament i:first-child { background: linear-gradient(90deg, rgba(245,216,137,0), rgba(245,216,137,.9)); }
+.ornament i:last-child { background: linear-gradient(270deg, rgba(245,216,137,0), rgba(245,216,137,.9)); }
+.ornament b {
+  position: relative;
+  width: 9px; height: 9px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #fff3cf, #c9972f);
+  box-shadow: 0 0 10px rgba(245,216,137,.6);
+}
+.ornament b::before, .ornament b::after {
+  content: ""; position: absolute; top: 2.5px;
+  width: 4px; height: 4px;
+  background: #e2c680;
+}
+.ornament b::before { left: -9px; top: 11.5px; }
+.ornament b::after { left: 11.5px; top: -9px; }
+
+.sub {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-indent: .22em;
+  color: #efe4c9;
+}
+
+.panel {
+  width: min(100% - 32px, 460px);
+  margin: 6px auto 0;
+  padding: 0 0 calc(28px + env(safe-area-inset-bottom));
+  text-align: center;
+}
+.lead { color: var(--ink); font-size: 15px; margin-bottom: 18px; text-wrap: pretty; }
+
+.btn-col { display: grid; gap: 10px; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 50px;
+  padding: 10px 20px;
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  background: rgba(12,9,32,.5);
+  color: var(--gold-bright);
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.btn small { font-family: var(--sans); font-size: 12.5px; font-weight: 500; opacity: .8; }
+.btn:hover { background: rgba(201,162,75,.16); }
+.btn:active { transform: translateY(1px); }
+.btn.primary {
+  background: linear-gradient(180deg, #f3d584, #c99a3a);
+  border-color: #f7e2a6;
+  color: #2a1a0c;
+  box-shadow: 0 6px 22px rgba(201,154,58,.28);
+}
+.btn.primary:hover { background: linear-gradient(180deg, #f8dea0, #d5a647); }
+
+.link-btn {
+  margin-top: 16px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0; background: none;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+}
+.link-btn small { color: var(--ink-faint); }
+.link-btn:hover { color: var(--ink); }
+
+/* ---------- 등대 ---------- */
+.menorah-wrap {
+  width: min(100%, 880px);
+  margin: 0 auto;
+  padding: 6px 8px 0;
+  flex: 0 0 auto;
+}
+.menorah { display: block; width: 100%; height: auto; overflow: visible; }
+
+.metal { fill: none; stroke: var(--gold-dim); stroke-width: 10; stroke-linecap: round; transition: stroke .9s ease; }
+.sheen { fill: none; stroke: #c8a65a; stroke-width: 2.6; stroke-linecap: round; opacity: .42; transition: stroke .9s ease, opacity .9s ease; }
+.solid { fill: var(--gold-dim); stroke: var(--gold-deep); stroke-width: 1; transition: fill .9s ease; }
+.branch { transition: filter .9s ease; }
+.branch.is-lit .metal { stroke: #d6a53c; }
+.branch.is-lit .sheen { stroke: #fff2c2; opacity: .95; }
+.branch.is-lit .solid { fill: #e0b450; }
+.branch.is-lit { filter: drop-shadow(0 0 5px rgba(255,196,96,.55)); }
+
+/* 받침대: 켜진 등잔 수에 비례해 금빛이 올라온다 */
+.base-bright { opacity: var(--lit); transition: opacity 1.2s ease; }
+.base-bright .solid { fill: #e3b752; stroke: #f7dc93; }
+.base-bright .metal { stroke: #d6a53c; }
+
+/* 상: 조각목에 금을 입힌 상. 등잔이 켜질수록 금빛이 살아난다 */
+.wood { fill: #3b2414; stroke: var(--gold-deep); stroke-width: 1; }
+.wood.back { fill: #24160d; stroke: none; }
+.base-bright .wood { fill: #6e4520; stroke: #f1cf80; }
+.base-bright .wood.back { fill: #3e2714; }
+.table-shadow { fill: rgba(0,0,0,.5); }
+.table-glow { fill: #ffe6ad; opacity: calc(var(--lit) * .55); transition: opacity 1.2s ease; pointer-events: none; }
+
+.cup { fill: url(#cupMatte); stroke: var(--gold-deep); stroke-width: 1; }
+.rim { fill: #6f5522; stroke: #a8843a; stroke-width: 1; }
+.cup-knop { fill: var(--gold-dim); stroke: var(--gold-deep); stroke-width: 1; }
+.wick { stroke: #1c1410; stroke-width: 3; stroke-linecap: round; fill: none; }
+.lamp.is-lit .cup { fill: url(#cupLit); stroke: #f1cf80; }
+.lamp.is-lit .rim { fill: #b98a2c; stroke: #ffe9a8; }
+.lamp.is-lit .cup-knop { fill: #e0b450; }
+.lamp.is-lit .wick { stroke: #4a2a12; }
+
+.lamp-num {
+  font-family: var(--serif); font-size: 19px; font-weight: 700;
+  fill: var(--gold); opacity: .75;
+  transition: fill .3s, opacity .3s;
+}
+.lamp.is-lit .lamp-num { fill: #fff3cf; opacity: .95; }
+.lamp.is-pointed .lamp-num, .lamp.drop-over .lamp-num { fill: #fff; opacity: 1; }
+.lamp.is-pointed .cup, .lamp.drop-over .cup { stroke: #fff3cf; stroke-width: 2.5; }
+
+.lamp-hit { fill: transparent; pointer-events: all; cursor: pointer; }
+
+.glow {
+  opacity: 0;
+  transition: opacity 1s ease;
+  pointer-events: none;
+}
+.lamp.is-lit .glow { opacity: .95; animation: breathe var(--fd, 2s) ease-in-out infinite alternate; animation-delay: var(--fdelay, 0s); }
+
+.flame-wrap, .flame { transform-box: fill-box; transform-origin: 50% 100%; }
+.flame-wrap {
+  opacity: 0;
+  transform: scale(.1);
+  transition: opacity .45s ease, transform .7s cubic-bezier(.2, 1.5, .4, 1);
+  pointer-events: none;
+}
+.lamp.is-lit .flame-wrap { opacity: 1; transform: scale(1); }
+.lamp.is-lit .flame { animation: flicker var(--fd, 1.8s) ease-in-out infinite; animation-delay: var(--fdelay, 0s); }
+.flame-outer { fill: url(#flameOuter); }
+.flame-inner { fill: #fff8dc; opacity: .92; }
+
+.menorah.all-lit { animation: glory 3.2s ease-in-out infinite alternate; }
+
+@keyframes flicker {
+  0%, 100% { transform: rotate(-2deg) scale(1, 1); }
+  18%      { transform: rotate(2.5deg) scale(.95, 1.06); }
+  37%      { transform: rotate(-1deg) scale(1.04, .95); }
+  58%      { transform: rotate(3deg) scale(.96, 1.08); }
+  79%      { transform: rotate(-3deg) scale(1.03, .97); }
+}
+@keyframes breathe {
+  from { opacity: .72; }
+  to   { opacity: 1; }
+}
+@keyframes glory {
+  from { filter: drop-shadow(0 0 10px rgba(255,206,120,.35)); }
+  to   { filter: drop-shadow(0 0 26px rgba(255,214,140,.75)); }
+}
+
+/* ---------- 게임 화면: 교회 칸 (등잔 1~7 바로 아래 세로 7칸) ---------- */
+.game-panel { flex: 1 1 auto; display: flex; flex-direction: column; }
+
+.churches {
+  list-style: none;
+  margin: 4px 0 10px;
+  padding: 0 10px;
+  display: grid;
+  /* 4 · 3 : 여덟 눈금으로 나누고 칸마다 두 눈금씩. 둘째 줄 세 칸은 가운데로 */
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 6px;
+  align-items: stretch;
+}
+.church { grid-column: span 2; }
+.church:nth-child(5) { grid-column: 2 / span 2; }
+.church {
+  display: flex; flex-direction: column; align-items: stretch;
+  gap: 4px;
+  min-width: 0;
+  min-height: 104px;
+  padding: 5px 4px 6px;
+  border: 1px solid rgba(201,162,75,.24);
+  border-radius: 10px;
+  background: rgba(12,9,32,.58);
+  transition: border-color .3s, background .3s, box-shadow .3s;
+}
+.church-tag {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  width: 100%;
+  min-height: 34px;
+  padding: 3px 0;
+  border: 0; border-radius: 8px;
+  background: none;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+}
+.church-tag .num {
+  flex: 0 0 auto;
+  display: grid; place-items: center;
+  width: 22px; height: 22px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  font-size: 12px;
+  color: var(--gold-bright);
+}
+.tag-text { display: flex; flex-direction: column; align-items: center; gap: 3px; line-height: 1.2; }
+.church-tag .name { white-space: nowrap; font-size: 13.5px; letter-spacing: -.02em; }
+.church.is-lit { border-color: rgba(245,216,137,.7); background: rgba(70,46,22,.5); box-shadow: 0 0 18px rgba(255,190,96,.14) inset; }
+.church.is-lit .church-tag { color: var(--gold-bright); cursor: default; }
+.church.is-lit .num { background: var(--gold-bright); color: #2a1a0c; border-color: var(--gold-bright); }
+
+/* 조각을 골랐을 때: 아직 꺼진 교회가 놓을 자리임을 알려 준다 */
+.has-selection .church:not(.is-lit),
+.is-dragging .church:not(.is-lit) { border-color: rgba(245,216,137,.6); border-style: dashed; cursor: pointer; }
+.church.drop-over:not(.is-lit) { border-style: solid; border-color: var(--gold-bright); background: rgba(201,162,75,.2); }
+.church.nope { animation: nope .5s ease; }
+.tray.drop-over { border-top-color: var(--gold-bright); box-shadow: 0 -6px 22px rgba(245,216,137,.22); }
+
+.slot { flex: 1 1 auto; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.slot:empty::before {
+  content: "";
+  flex: 1 1 auto; min-height: 34px;
+  border: 1px dashed rgba(201,162,75,.3);
+  border-radius: 7px;
+}
+
+.ref-badge {
+  padding: 1px 6px;
+  font-family: var(--sans);
+  border-radius: 999px;
+  background: var(--gold-bright);
+  color: #2a1a0c;
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.chip {
+  display: flex; align-items: center; justify-content: space-between; gap: 4px;
+  padding: 5px 5px;
+  border-radius: 7px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: left;
+}
+.chip.is-locked { background: rgba(245,216,137,.13); border: 1px solid rgba(245,216,137,.45); color: var(--ink); }
+.chip.is-pending {
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+  background: linear-gradient(160deg, #fbf3e0, #eadbb8);
+  border: 1px dashed #8c6b2c;
+  color: var(--parch-ink);
+  cursor: pointer;
+}
+/* 되돌리기 표시는 칸이 넉넉한 넓은 화면에서만 */
+.chip.is-pending::after { content: none; flex: 0 0 auto; font-size: 11px; line-height: 1; opacity: .6; }
+
+.church-actions { display: flex; justify-content: center; }
+.mini-btn {
+  min-height: 34px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  background: rgba(12,9,32,.5);
+  color: var(--gold-bright);
+  font-size: 12.5px; font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mini-btn:hover { filter: brightness(1.1); }
+
+.church-note.msg { font-size: 11.5px; line-height: 1.3; color: var(--wrong); font-weight: 700; text-align: center; }
+.msg-short { display: none; }
+
+/* 열어 본 힌트는 칸 아래에 모아서 보여 준다 */
+.hint-board { display: grid; gap: 6px; padding: 0 8px; margin-bottom: 12px; }
+.hint-board:empty { display: none; }
+.hint-card {
+  padding: 8px 10px;
+  border-left: 3px solid var(--gold-bright);
+  border-radius: 4px 8px 8px 4px;
+  background: rgba(245,216,137,.10);
+  color: var(--ink);
+}
+.hint-who { display: block; font-family: var(--serif); font-size: 13px; font-weight: 700; color: var(--gold-bright); }
+.hint-main { display: block; font-size: 14px; font-weight: 600; line-height: 1.5; }
+.hint-count {
+  display: inline-block; margin-right: 6px; padding: 0 7px;
+  border-radius: 999px; background: var(--gold-bright); color: #2a1a0c;
+  font-size: 11.5px; font-weight: 700; vertical-align: 1px; white-space: nowrap;
+}
+.hint-sub { display: block; margin-top: 3px; font-family: var(--serif); font-size: 12px; color: var(--ink-soft); }
+
+/* ---------- 카드 영역 ---------- */
+.tray {
+  position: sticky; bottom: 0; z-index: 5;
+  margin-top: auto;
+  padding: 7px 0 calc(8px + env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(201,162,75,.4);
+  background: linear-gradient(rgba(12,9,32,.86), rgba(8,6,22,.97));
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+}
+.churches + .tray { margin-top: auto; }
+.game-panel .churches { margin-bottom: 12px; }
+.tray-head { display: flex; align-items: baseline; gap: 8px; padding: 0 12px; }
+.tray-head h2 { font-family: var(--serif); font-size: 14px; color: var(--gold-bright); white-space: nowrap; }
+.tray-head p { font-size: 11.5px; color: var(--ink-faint); min-width: 0; }
+.tray.nudge .tray-head p { animation: nudge 1s ease; }
+
+.tray-scroll {
+  display: flex; align-items: stretch; gap: 10px;
+  overflow-x: auto;
+  padding: 10px 12px 6px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,162,75,.5) transparent;
+}
+/* 옆으로 넘기면 조각이 더 있다는 표시 */
+.tray-rail { position: relative; }
+.tray-rail::before, .tray-rail::after {
+  content: ""; position: absolute; top: 0; bottom: 0; z-index: 1;
+  width: 54px;
+  pointer-events: none;
+  opacity: 0; transition: opacity .2s;
+}
+.tray-rail::before { left: 0; background: linear-gradient(90deg, rgba(8,6,22,.95), rgba(8,6,22,0)); }
+.tray-rail::after { right: 0; background: linear-gradient(270deg, rgba(8,6,22,.95), rgba(8,6,22,0)); }
+.tray-rail.can-prev::before, .tray-rail.can-next::after { opacity: 1; }
+.tray-arrow {
+  position: absolute; top: 50%; z-index: 2;
+  display: grid; place-items: center;
+  width: 34px; height: 46px;
+  margin-top: -23px;
+  padding: 0 0 4px;
+  border: 1px solid #f7e2a6;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f3d584, #c99a3a);
+  color: #2a1a0c;
+  font-size: 26px; font-weight: 700; line-height: 1;
+  box-shadow: 0 4px 14px rgba(0,0,0,.55);
+  cursor: pointer;
+}
+.tray-arrow.prev { left: 5px; }
+.tray-arrow.next { right: 5px; animation: beckon 1.4s ease-in-out infinite; }
+@keyframes beckon {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.tray-empty { margin: auto; padding: 8px 0; font-size: 13px; color: var(--ink-soft); text-align: center; }
+div.tray-empty { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 14px; }
+.check-all { min-height: 48px; padding: 8px 28px; }
+.tray-head p.is-result { color: var(--gold-bright); font-size: 12.5px; font-weight: 700; }
+
+.card {
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; justify-content: center;
+  width: 164px;
+  min-height: 74px;
+  padding: 9px 12px;
+  border: 1px solid #b89548;
+  border-radius: 10px;
+  background: linear-gradient(160deg, #fcf5e4, #ead9b3);
+  color: var(--parch-ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.42;
+  text-align: left;
+  box-shadow: 0 4px 14px rgba(0,0,0,.45), inset 0 0 0 3px rgba(255,255,255,.3);
+  cursor: grab;
+  scroll-snap-align: center;
+  touch-action: pan-x;
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card:first-child { margin-left: auto; }
+.card:last-child { margin-right: auto; }
+.tray .card { width: 138px; min-height: 62px; }
+.card .piece { display: block; }
+.card .piece + .piece { margin-top: 6px; padding-top: 6px; border-top: 1px dashed rgba(95,70,25,.5); }
+.card[aria-pressed="true"] {
+  transform: translateY(-5px);
+  border-color: #fff3cf;
+  box-shadow: 0 0 0 3px var(--gold-bright), 0 10px 26px rgba(255,190,96,.4);
+}
+.card.is-source, .chip.is-source { opacity: .3; }
+.card.shake { animation: shake .5s ease; }
+.card.ghost, .chip.ghost {
+  position: fixed; left: 0; top: 0; z-index: 50;
+  margin: 0;
+  pointer-events: none;
+  cursor: grabbing;
+  opacity: .95;
+  box-shadow: 0 0 0 3px var(--gold-bright), 0 16px 34px rgba(0,0,0,.55);
+  transition: none;
+}
+.is-dragging, .is-dragging * { cursor: grabbing !important; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px) rotate(-1.5deg); }
+  40% { transform: translateX(6px) rotate(1.5deg); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+@keyframes nope {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); border-color: var(--wrong); }
+  75% { transform: translateX(4px); border-color: var(--wrong); }
+}
+@keyframes nudge {
+  0%, 100% { color: var(--ink-faint); }
+  30%, 70% { color: var(--gold-bright); }
+}
+
+/* ---------- 완성 화면 ---------- */
+.done-panel { margin-top: 10px; }
+.done-panel h2 {
+  font-family: var(--serif);
+  font-size: clamp(20px, 5.8vw, 28px);
+  line-height: 1.5;
+  color: #fff3cf;
+  text-shadow: 0 0 24px rgba(255,214,140,.45);
+  text-wrap: balance;
+}
+.done-panel h2:focus { outline: none; }
+.verse-ref { display: inline-block; font-size: .82em; color: var(--gold-bright); }
+.stats { display: flex; justify-content: center; gap: 12px; margin: 16px 0 20px; }
+.stats > div {
+  flex: 1 1 0; max-width: 170px;
+  padding: 10px 8px;
+  border: 1px solid rgba(245,216,137,.4);
+  border-radius: 12px;
+  background: rgba(12,9,32,.45);
+}
+.stats dt { font-size: 12.5px; color: var(--ink-soft); }
+.stats dd { font-family: var(--serif); font-size: 21px; font-weight: 700; color: var(--gold-bright); }
+
+/* ---------- 학습용 표 ---------- */
+.table-panel { width: min(100% - 24px, 920px); margin: 0 auto; padding: 26px 0 calc(32px + env(safe-area-inset-bottom)); }
+.table-head { text-align: center; margin-bottom: 16px; }
+.table-head h2 { font-family: var(--serif); font-size: clamp(20px, 5.4vw, 28px); color: var(--gold-bright); }
+.table-head h2:focus { outline: none; }
+.table-scroll { overflow-x: auto; border: 1px solid rgba(201,162,75,.4); border-radius: 12px; background: rgba(12,9,32,.6); }
+.promise-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 14px; }
+.promise-table th, .promise-table td { padding: 10px 12px; text-align: left; vertical-align: top; border-bottom: 1px solid rgba(201,162,75,.22); }
+.promise-table thead th { font-family: var(--serif); color: var(--gold-bright); background: rgba(201,162,75,.12); white-space: nowrap; }
+.promise-table tbody th { font-family: var(--serif); font-size: 15.5px; color: var(--ink); white-space: nowrap; }
+.promise-table tbody tr:last-child > * { border-bottom: 0; }
+.promise-table td.ref { white-space: nowrap; color: var(--ink-soft); }
+.promise-table td.note { color: var(--ink-soft); }
+.promise-table ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 3px; }
+.promise-table .circ { color: var(--gold-bright); margin-right: 4px; }
+.promise-table .verse { margin-top: 6px; font-family: var(--serif); font-size: 13px; color: var(--ink-soft); }
+.table-panel .btn-row { margin-top: 18px; }
+
+/* ---------- 데스크톱 ---------- */
+@media (min-width: 900px) {
+  /* 등대·이름표·상단 바가 같은 너비를 써야 등잔과 이름표가 한 줄로 맞는다.
+     화면이 낮으면 한 화면에 들어오도록 너비를 줄인다. */
+  #app { --stage-w: min(100%, 880px, max(700px, calc((100vh - 370px) * 1.7))); }
+  body { font-size: 16px; }
+  .bar { width: var(--stage-w); margin: 0 auto; padding: 14px 0 0; }
+  .menorah-wrap { width: var(--stage-w); }
+  .ghost-btn, .mode-label, .timer { font-size: 13.5px; }
+  .dots { font-size: 15px; }
+  .menorah-wrap { padding: 4px 0 0; }
+  .intro { padding-top: 34px; }
+
+  /* 넓은 화면: 일곱 칸을 한 줄로, 등잔 1~7 바로 아래에 */
+  .churches { width: var(--stage-w); margin: 4px auto 14px; padding: 0; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  .church, .church:nth-child(5) { grid-column: auto; }
+  .chip.is-pending::after { content: "↩"; }
+  .hint-board { width: var(--stage-w); margin: 0 auto 14px; padding: 0; }
+  .church { min-height: 168px; padding: 6px; gap: 6px; }
+  .church-tag { gap: 4px; }
+  .tag-text { align-items: center; gap: 4px; }
+  .church-tag .name { font-size: 15.5px; letter-spacing: 0; }
+  .chip { font-size: 13px; padding: 5px 9px; }
+  .church-note.msg { font-size: 12.5px; }
+
+  .tray-head { justify-content: center; }
+  .tray-head h2 { font-size: 15px; }
+  .tray-head p { font-size: 13px; }
+  .card { width: 172px; font-size: 14.5px; }
+  .tray .card { width: 150px; }
+  .tray-scroll { padding-bottom: 10px; }
+}
+
+/* ---------- 움직임 줄이기 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .menorah.all-lit { filter: drop-shadow(0 0 18px rgba(255,214,140,.6)); }
+}
+
+/* ---------- 인쇄: 학습용 표만 ---------- */
+@media print {
+  @page { margin: 16mm; }
+  body { background: #fff !important; color: #000; font-size: 11pt; }
+  .sanctuary, .no-print, .bar, .intro, .menorah-wrap, .start-panel, .game-panel, .done-panel { display: none !important; }
+  #app { min-height: 0; display: block; }
+  #app .table-panel { display: block !important; width: 100%; padding: 0; }
+  .eyebrow { color: #555; }
+  .table-head h2 { color: #000; font-size: 18pt; }
+  .table-scroll { overflow: visible; border: 0; background: none; border-radius: 0; }
+  .promise-table { min-width: 0; font-size: 11pt; }
+  .promise-table th, .promise-table td { border: 1px solid #888; color: #000 !important; padding: 7pt 8pt; }
+  .promise-table thead th { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .promise-table .circ, .promise-table .verse { color: #000; }
+  .promise-table tr { break-inside: avoid; }
+}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>일곱 금촛대 — 이기는 자의 약속</title>
+  <meta name="description" content="요한계시록 2–3장의 일곱 교회와 이기는 자에게 주신 약속을 짝지어 등잔에 불을 켜는 매칭 퀴즈">
+  <meta name="theme-color" content="#120d2e">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sanctuary" aria-hidden="true"></div>
+
+  <main id="app" data-view="start">
+
+    <!-- 게임 상단 바 -->
+    <header class="bar">
+      <button type="button" class="ghost-btn" id="btn-home">‹ 처음</button>
+      <div class="bar-end">
+        <span class="timer" id="timer" aria-hidden="true">00:00</span>
+        <button type="button" class="ghost-btn" id="btn-sound" aria-pressed="false">효과음 <span id="sound-state">끔</span></button>
+      </div>
+    </header>
+
+    <!-- 시작 화면 제목 -->
+    <div class="intro">
+      <p class="eyebrow">요한계시록 2–3장</p>
+      <h1>일곱 금촛대</h1>
+      <div class="ornament" aria-hidden="true"><i></i><b></b><i></i></div>
+      <p class="sub">이기는 자에게 주신 약속</p>
+    </div>
+
+    <!-- 등대 (app.js 가 SVG 로 그린다) -->
+    <div class="menorah-wrap" id="menorah"></div>
+
+    <!-- 1. 시작 화면 -->
+    <section class="panel start-panel" aria-label="시작">
+      <p class="lead">‘이기는 자’에게 주신 약속 조각 12장을 일곱 교회에 나누어 놓아 보세요.<br>모두 놓고 확인하면, 바르게 맞춘 교회의 등잔에 불이 켜집니다.</p>
+      <div class="btn-col">
+        <button type="button" class="btn primary" id="btn-resume" hidden>이어서 하기</button>
+        <button type="button" class="btn primary" id="btn-start">시작하기 <small>약속 조각 12장</small></button>
+      </div>
+      <button type="button" class="link-btn" id="btn-table-start">약속 전체 보기 <small>(정답이 담긴 학습용 표)</small></button>
+    </section>
+
+    <!-- 2. 게임 화면 -->
+    <section class="game-panel" aria-label="게임">
+      <h2 class="sr-only">일곱 교회</h2>
+      <ol class="churches" id="churches"></ol>
+      <div class="hint-board" id="hint-board" aria-label="힌트"></div>
+
+      <div class="tray" id="tray-wrap">
+        <div class="tray-head">
+          <h2 id="tray-title">약속 조각</h2>
+          <p id="tray-help"></p>
+        </div>
+        <div class="tray-rail" id="tray-rail">
+          <button type="button" class="tray-arrow prev" id="tray-prev" aria-label="앞쪽 조각 보기" hidden>‹</button>
+          <div class="tray-scroll" id="tray" role="group" aria-labelledby="tray-title"></div>
+          <button type="button" class="tray-arrow next" id="tray-next" aria-label="뒤쪽 조각 더 보기" hidden>›</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. 완성 화면 -->
+    <section class="panel done-panel" aria-labelledby="done-title">
+      <h2 id="done-title" tabindex="-1"></h2>
+      <dl class="stats">
+        <div><dt>걸린 시간</dt><dd id="stat-time">–</dd></div>
+        <div><dt>오답 횟수</dt><dd id="stat-wrong">–</dd></div>
+      </dl>
+      <div class="btn-col">
+        <button type="button" class="btn primary" id="btn-again">다시 하기</button>
+        <button type="button" class="btn" id="btn-table-done">약속 전체 보기 <small>학습용 표</small></button>
+      </div>
+    </section>
+
+    <!-- 4. 학습용 표 -->
+    <section class="table-panel" aria-labelledby="table-title">
+      <div class="table-head">
+        <p class="eyebrow">요한계시록 2–3장</p>
+        <h2 id="table-title" tabindex="-1">일곱 교회, 이기는 자에게 주신 약속</h2>
+      </div>
+      <div class="table-scroll" id="table-holder"></div>
+      <div class="btn-row no-print">
+        <button type="button" class="btn primary" id="btn-print">인쇄하기</button>
+        <button type="button" class="btn" id="btn-table-back">돌아가기</button>
+      </div>
+    </section>
+
+    <div class="sr-only" id="live" role="status" aria-live="polite" aria-atomic="true"></div>
+  </main>
+
+  <noscript><p style="color:#fff;padding:24px;text-align:center">이 앱은 자바스크립트를 켜야 동작합니다.</p></noscript>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
